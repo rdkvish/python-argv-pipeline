@@ -1,5 +1,7 @@
 def WS1 = "$JENKINS_HOME/workspace/$JOB_NAME/$BUILD_NUMBER/python-argv-pipeline"
 def WS2 = "$JENKINS_HOME/workspace/$JOB_NAME/$BUILD_NUMBER/programmingisfun"
+def ARG1 = "release"
+def ARG2 = "d-2022"
 
 pipeline {
     agent any
@@ -31,7 +33,7 @@ pipeline {
                    // Get some code from a GitHub repository
                    git branch: 'main', url: 'https://github.com/rdkvish/python-argv-pipeline.git'
                    sh "ls -lh"
-                   sh "python3 ./src/pg.py Hello World $WS1 $WS2"
+                   sh "python3 ./src/pg.py Hello World $WS1 $WS2 $ARG1 $ARG2"
                 }
             }
         }
