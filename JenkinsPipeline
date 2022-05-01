@@ -1,0 +1,50 @@
+def WS1 = "$JENKINS_HOME/workspace/$JOB_NAME/$BUILD_NUMBER/python-argv-pipeline"
+def WS2 = "$JENKINS_HOME/workspace/$JOB_NAME/$BUILD_NUMBER/programmingisfun"
+
+pipeline {
+    agent any
+    options {
+        // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+    }
+    stages {
+        stage('Workspace') {
+            steps {
+                sh "echo $WS1"
+                sh "echo $WS2"
+                sh "echo ${env.JOB_NAME}"
+                sh "env"
+            }
+        }
+        stage("Checkout programmingisfun") {
+            steps {
+                dir("$WS2") {
+                   // Get some code from a GitHub repository
+                   git "https://github.com/rdkvish/programmingisfun.git"
+                   sh "ls -lh"
+                }
+            }
+        }
+        stage("Checkout python-argv-pipeline") {
+            steps {
+                dir("$WS1") {
+                   // Get some code from a GitHub repository
+                   git branch: 'main', url: 'https://github.com/rdkvish/python-argv-pipeline.git'
+                   sh "ls -lh"
+                   sh "python3 ./src/pg.py Hello World $WS1 $WS2"
+                }
+            }
+        }
+    }
+    post {
+        // Clean after build
+        always {
+            cleanWs(cleanWhenNotBuilt: false,
+                    deleteDirs: true,
+                    disableDeferredWipeout: false,
+                    notFailBuild: true,
+                    patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
+                               [pattern: '.propsfile', type: 'EXCLUDE']])
+        }
+    }
+}
