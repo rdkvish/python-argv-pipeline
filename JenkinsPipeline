@@ -18,12 +18,13 @@ pipeline {
                 sh "env"
             }
         }
-        stage("Checkout programmingisfun") {
+        stage("Checkout spring-mvc5") {
             steps {
                 dir("$WS2") {
                    // Get some code from a GitHub repository
-                   git "https://github.com/rdkvish/programmingisfun.git"
+                   git "https://github.com/rdkvish/spring-mvc5.git"
                    sh "ls -lh"
+                   sh "/usr/local/bin/mvn clean compile"
                 }
             }
         }
