@@ -1,0 +1,23 @@
+def myvar = "${env.JOB_NAME}" as String
+pipeline {
+    agent any
+    stages {
+        stage('Dynamic Stages') {
+            steps {
+                script {
+                    stage("Checkout ${myvar}"){
+                        println("${env.STAGE_NAME}")
+                    }
+                     stage("Complie ${myvar}"){
+                        println("${env.STAGE_NAME}")
+                    }
+                }
+            }
+        }
+    }
+    post { 
+        always { 
+            cleanWs()
+        }
+    }
+}
